@@ -1,0 +1,33 @@
+# http address should be listened
+listen: "0.0.0.0:80"
+# each ip request rate limit
+rate_limit: 3
+# each X seconds to remove dead proxy from mysql
+remove_interval: 60 # in seconds
+# how many error times could a proxy get before being deleted
+max_error_time: 10
+# each require proxy request's max require number
+max_get_number: 100
+# each X seconds to fetch a proxy
+fetch_interval: 60
+# use http/socks5 proxy for fetching, useful for user in China, leave empty if you don't want to use a proxy for fetching
+fetch_proxy: "http://127.0.0.1:1090" # "socks5://127.0.0.1:1090"
+# mysql address, user:pass@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local
+mysql: "root:root@tcp(127.0.0.1:3306)/test?charset=utf8mb4&parseTime=True&loc=Local"
+# which proxy provider to use
+providers:
+  - "cPL"
+  - "strPL"
+  - "tsxPL"
+provider_apis:
+  cPL:
+    url: "https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt"
+    timeout: 10
+  str:
+    http_url: "https://raw.githubusercontent.com/shiftytr/proxy-list/master/http.txt"
+    socks5_url: "https://raw.githubusercontent.com/shiftytr/proxy-list/master/socks5.txt"
+    timeout: 10
+  tsx:
+    http_url: "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/http.txt"
+    socks5_url: "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt"
+    timeout: 10
