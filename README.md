@@ -18,10 +18,15 @@
 3. run the executable
 
 #### From Docker
-
-#### From Docker-Compose
+1. `docker pull ghcr.io/jobberrt/pxier:master`
+2. check the `config.example.yaml` and see if anything you need to change. If any, use -env to set(env key could be set to UPPERCASE, since I only test that).
+3. run the docker container with your customized config(also expose the port)
 
 #### Build yourself
+1. `git clone the repo`
+2. cd into the saved directory
+3. `go mod tidy && go mod vendor && go build -o pixer`
+4. `./pixer`
 
 ### Available Providers
-
+Please check [File](./core/types.go)
