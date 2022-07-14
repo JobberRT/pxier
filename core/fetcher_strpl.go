@@ -1,6 +1,7 @@
 package core
 
 import (
+	"crypto/tls"
 	"github.com/sirupsen/logrus"
 	"github.com/valyala/fasthttp"
 	"github.com/valyala/fasthttp/fasthttpproxy"
