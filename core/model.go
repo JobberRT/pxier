@@ -1,13 +1,13 @@
 package core
 
 type Proxy struct {
-	Id        int `gorm:"primaryKey; autoIncrement"`
-	Address   string
-	Provider  string
-	CreatedAt int64
-	UpdatedAt int64
-	ErrTimes  int
-	DialType  string
+	Id        int    `gorm:"primaryKey; autoIncrement"`
+	Address   string `json:"address"`
+	Provider  string `json:"provider"`
+	CreatedAt int64  `json:"-"`
+	UpdatedAt int64  `json:"-"`
+	ErrTimes  int    `json:"-"`
+	DialType  string `json:"dial_type"`
 }
 
 func (p *Proxy) TableName() string {

@@ -33,10 +33,10 @@ func (p *Pxier) apiGetStatus(c echo.Context) error {
 func (p *Pxier) apiGetProxy(c echo.Context) error {
 	num := c.Get("num").(int)
 	providers := c.Get("providers").([]string)
-	if num < len(providers) {
+	if num > len(providers) {
 		providers = make([]string, 0)
 		for len(providers) < num {
-			providers = append(providers, AllProviderType[rand.Intn(num)])
+			providers = append(providers, AllProviderType[rand.Intn(len(AllProviderType))])
 		}
 	}
 	eachProviderNum := num / len(providers)
