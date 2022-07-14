@@ -1,6 +1,7 @@
 package core
 
 import (
+	"crypto/tls"
 	"github.com/sirupsen/logrus"
 	"github.com/valyala/fasthttp"
 	"github.com/valyala/fasthttp/fasthttpproxy"
@@ -37,7 +38,11 @@ func newCPLFetcher(url, proxy string, timeO int64) *cplFetcher {
 			}
 		}
 	} else {
-		f.client = &fasthttp.Client{}
+		f.client = &fasthttp.Client{
+			TLSConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
+		}
 	}
 	return f
 }
