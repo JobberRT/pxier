@@ -41,7 +41,11 @@ func newSTRFetcher(hu, su, proxy string, timeO int64) *strFetcher {
 			}
 		}
 	} else {
-		f.client = &fasthttp.Client{}
+		f.client = &fasthttp.Client{
+			TLSConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
+		}
 	}
 	return f
 }
