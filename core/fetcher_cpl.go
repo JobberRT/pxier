@@ -25,23 +25,13 @@ func newCPLFetcher(url, proxy string, timeO int64) *cplFetcher {
 	f := &cplFetcher{
 		url:     url,
 		timeout: time.Duration(timeO) * time.Second,
-		client:  &fasthttp.Client{},
+		client:  &fasthttp.Client{TLSConfig: &tls.Config{InsecureSkipVerify: true}},
 	}
 	if len(proxy) != 0 {
 		if strings.Contains(proxy, "http") {
-			f.client = &fasthttp.Client{
-				Dial: fasthttpproxy.FasthttpHTTPDialer(proxy),
-			}
+			f.client.Dial = fasthttpproxy.FasthttpHTTPDialer(proxy)
 		} else {
-			f.client = &fasthttp.Client{
-				Dial: fasthttpproxy.FasthttpSocksDialer(proxy),
-			}
-		}
-	} else {
-		f.client = &fasthttp.Client{
-			TLSConfig: &tls.Config{
-				InsecureSkipVerify: true,
-			},
+			f.client.Dial = fasthttpproxy.FasthttpSocksDialer(proxy)
 		}
 	}
 	return f
