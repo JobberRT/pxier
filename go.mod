@@ -1,4 +1,4 @@
-module pxier
+module github.com/JobberRT/pxier
 
 go 1.18
 
