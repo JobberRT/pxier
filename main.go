@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
+	"github.com/JobberRT/pxier/core"
 	nFormatter "github.com/antonfisher/nested-logrus-formatter"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"os"
-	"pxier/core"
 	"runtime"
 	"strings"
 	"time"
