@@ -61,7 +61,7 @@ func checkRequireProxyParam(next echo.HandlerFunc) echo.HandlerFunc {
 		for _, pvd := range providerSlice {
 			exist := false
 			for _, each := range UserAvailableProviderType {
-				if each == pvd {
+				if strings.ToUpper(pvd) == each {
 					exist = true
 					break
 				}
@@ -70,7 +70,7 @@ func checkRequireProxyParam(next echo.HandlerFunc) echo.HandlerFunc {
 				logrus.WithField("provider", pvd).Error("unknown provider")
 				continue
 			}
-			if pvd == "mix" {
+			if strings.ToUpper(pvd) == ProviderTypeMix {
 				for _, each := range AllProviderType {
 					uniqueProvider[each] = true
 				}

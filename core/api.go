@@ -66,7 +66,7 @@ func (p *Pxier) apiReportError(c echo.Context) error {
 		})
 	}
 
-	p.db.Where(&Proxy{Address: address}).Update("err_times", temp.ErrTimes+1)
+	p.db.Model(&temp).Update("err_times", temp.ErrTimes+1)
 	return c.JSON(http.StatusOK, map[string]any{
 		"code": httpSuccess,
 		"data": "success",

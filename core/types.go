@@ -12,11 +12,13 @@ const (
 
 const (
 	// ProviderTypeCPL https://github.com/clarketm/proxy-list
-	ProviderTypeCPL = "cPL"
+	ProviderTypeCPL = "CPL"
 	// ProviderTypeTSXPL https://github.com/TheSpeedX/PROXY-List
-	ProviderTypeTSXPL = "tsxPL"
+	ProviderTypeTSXPL = "TSXPL"
 	// ProviderTypeSTRPL https://github.com/ShiftyTR/Proxy-List
-	ProviderTypeSTRPL = "strPL"
+	ProviderTypeSTRPL = "STRPL"
+	// ProviderTypeMix all type
+	ProviderTypeMix = "MIX"
 )
 
 var (
@@ -29,6 +31,6 @@ var (
 		ProviderTypeCPL,
 		ProviderTypeTSXPL,
 		ProviderTypeSTRPL,
-		"mix",
+		ProviderTypeMix,
 	}
 )

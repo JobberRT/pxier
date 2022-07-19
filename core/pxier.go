@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/viper"
 	"golang.org/x/time/rate"
 	"gorm.io/gorm"
+	"strings"
 	"time"
 )
 
@@ -93,7 +94,7 @@ func (p *Pxier) initFetcher() {
 		selectedProviders = AllProviderType
 	}
 	for _, pvd := range selectedProviders {
-		p.fetchers = append(p.fetchers, newFetcher(pvd))
+		p.fetchers = append(p.fetchers, newFetcher(strings.ToUpper(pvd)))
 	}
 }
 
