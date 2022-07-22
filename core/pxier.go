@@ -53,8 +53,10 @@ func (p *Pxier) Run() {
 			return
 		}
 		for _, f := range p.fetchers {
-			proxies := f.Fetch()
-			p.insertProxy(proxies)
+			go func() {
+				proxies := f.Fetch()
+				p.insertProxy(proxies)
+			}()
 		}
 		<-ticker.C
 	}

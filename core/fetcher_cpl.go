@@ -49,6 +49,7 @@ func (f *cplFetcher) Fetch() []*Proxy {
 	req.Header.SetContentEncoding("gzip")
 	if err := f.client.DoTimeout(req, res, f.timeout); err != nil {
 		logrus.WithError(err).WithField("url", f.url).Error("failed to get proxy")
+		return nil
 	}
 
 	body, err := readBody(res)
