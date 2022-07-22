@@ -16,11 +16,12 @@ fetch_proxy: "http://127.0.0.1:1090" # "socks5://127.0.0.1:1090"
 mysql: "root:root@tcp(127.0.0.1:3306)/test?charset=utf8mb4&parseTime=True&loc=Local"
 # which proxy provider to use
 providers:
-  - "cPL"
-  - "strPL"
-  - "tsxPL"
+  - "cpl"
+  - "str"
+  - "tsx"
+  - "ihuan"
 provider_apis:
-  cPL:
+  cpl:
     url: "https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt"
     timeout: 10
   str:
@@ -31,3 +32,9 @@ provider_apis:
     http_url: "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/http.txt"
     socks5_url: "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt"
     timeout: 10
+  ihuan:
+    statistics_url: "https://ip.ihuan.me/ti.html"
+    key_url: "https://ip.ihuan.me/mouse.do"
+    http_url: "https://ip.ihuan.me/tqdl.html"
+    timeout: 15
+    zone: "中国"

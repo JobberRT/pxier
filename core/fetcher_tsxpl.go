@@ -63,6 +63,7 @@ func (f *tsxFetcher) fetchHttpProxy() []*Proxy {
 	req.Header.SetContentEncoding("gzip")
 	if err := f.client.DoTimeout(req, res, f.timeout); err != nil {
 		logrus.WithError(err).WithField("url", f.httpUrl).Error("failed to get proxy")
+		return nil
 	}
 
 	body, err := readBody(res)
@@ -99,6 +100,7 @@ func (f *tsxFetcher) fetchSocks5Proxy() []*Proxy {
 	req.Header.SetContentEncoding("gzip")
 	if err := f.client.DoTimeout(req, res, f.timeout); err != nil {
 		logrus.WithError(err).WithField("url", f.socks5Url).Error("failed to get proxy")
+		return nil
 	}
 
 	body, err := readBody(res)
