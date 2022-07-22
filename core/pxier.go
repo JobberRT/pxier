@@ -1,7 +1,6 @@
 package core
 
 import (
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
@@ -39,8 +38,8 @@ func NewPixer() *Pxier {
 
 // Run starts the Pxier fetching loop
 func (p *Pxier) Run() {
+	go p.removeDeadProxy()
 	go func() {
-		go p.removeDeadProxy()
 		if len(viper.GetString("listen")) == 0 {
 			logrus.Panic("missing param listen")
 		}
@@ -71,7 +70,6 @@ func (p *Pxier) Stop() {
 
 // removeDeadProxy removes all the proxies that exceed the max error time
 func (p *Pxier) removeDeadProxy() {
-	logrus.Info("remove dead proxy")
 	interval := viper.GetInt64("remove_interval")
 	if interval == 0 {
 		logrus.Warn("remove_interval is 0, set to 60")
@@ -83,7 +81,7 @@ func (p *Pxier) removeDeadProxy() {
 		if p.stop {
 			return
 		}
-		p.db.Delete(&Proxy{}, "err_times > ?", fmt.Sprintf("%%%d%%", p.maxErr))
+		logrus.WithField("delete", p.db.Delete(&Proxy{}, "err_times > ?", p.maxErr).RowsAffected).Info("delete dead proxy")
 		<-ticker.C
 	}
 }
