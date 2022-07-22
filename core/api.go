@@ -33,20 +33,15 @@ func (p *Pxier) apiGetStatus(c echo.Context) error {
 func (p *Pxier) apiGetProxy(c echo.Context) error {
 	num := c.Get("num").(int)
 	providers := c.Get("providers").([]string)
-	if num > len(providers) {
-		providers = make([]string, 0)
-		for len(providers) < num {
-			providers = append(providers, AllProviderType[rand.Intn(len(AllProviderType))])
-		}
-	}
 	eachProviderNum := num / len(providers)
+	if eachProviderNum == 0 {
+		eachProviderNum = 1
+	}
+
 	res := make([]*Proxy, 0)
-	for _, pvd := range providers {
-		if len(res) >= num {
-			break
-		}
+	for len(res) < num {
 		temp := make([]*Proxy, 0)
-		p.db.Raw("select * from proxy where provider = UPPER(?) order by RAND() limit ?", pvd, eachProviderNum).Scan(&temp)
+		p.db.Raw("select * from proxy where provider = UPPER(?) order by RAND() limit ?", providers[rand.Intn(len(providers))], eachProviderNum).Scan(&temp)
 		res = append(res, temp...)
 	}
 	return c.JSON(http.StatusOK, map[string]any{
