@@ -46,7 +46,7 @@ func (p *Pxier) apiGetProxy(c echo.Context) error {
 			break
 		}
 		temp := make([]*Proxy, 0)
-		p.db.Raw("select * from proxy where provider = ? order by RAND() limit ?", pvd, eachProviderNum).Scan(&temp)
+		p.db.Raw("select * from proxy where provider = UPPER(?) order by RAND() limit ?", pvd, eachProviderNum).Scan(&temp)
 		res = append(res, temp...)
 	}
 	return c.JSON(http.StatusOK, map[string]any{
