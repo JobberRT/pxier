@@ -46,6 +46,12 @@ func newIHuanFetcher(hu, su, ku, zone, proxy string, timeO int64, efn int) *ihua
 	if timeO == 0 {
 		timeO = 15
 	}
+	if efn == 0 {
+		efn = 100
+	}
+	if timeO == 0 {
+		timeO = 15
+	}
 	f := &ihuanFetcher{
 		httpUrl:       hu,
 		statisticsUrl: su,

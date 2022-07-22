@@ -43,7 +43,7 @@ func newFetcher(pvd string) fetcher {
 			viper.GetString("provider_apis.ihuan.zone"),
 			viper.GetString("fetch_proxy"),
 			viper.GetInt64("provider_apis.ihuan.timeout"),
-			viper.GetInt("max_get_number"),
+			viper.GetInt("provider_apis.ihuan.each_fetch_num"),
 		)
 	default:
 		logrus.WithField("provider", pvd).Panic("unknown provider type")

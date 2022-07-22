@@ -6,7 +6,7 @@ rate_limit: 3
 remove_interval: 60 # in seconds
 # how many error times could a proxy get before being deleted
 max_error_time: 10
-# each require proxy request's max require number
+# client each require proxy request's max require number
 max_get_number: 100
 # each X seconds to fetch a proxy
 fetch_interval: 60
@@ -33,6 +33,7 @@ provider_apis:
     socks5_url: "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt"
     timeout: 10
   ihuan:
+    each_fetch_num: 300
     statistics_url: "https://ip.ihuan.me/ti.html"
     key_url: "https://ip.ihuan.me/mouse.do"
     http_url: "https://ip.ihuan.me/tqdl.html"
