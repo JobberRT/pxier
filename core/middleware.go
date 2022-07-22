@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 	"net/http"
 	"strconv"
 	"strings"
@@ -43,8 +44,8 @@ func checkRequireProxyParam(next echo.HandlerFunc) echo.HandlerFunc {
 		if numberInt == 0 {
 			numberInt = 1
 		}
-		if numberInt > 1000 {
-			numberInt = 1000
+		if numberInt > viper.GetInt("max_get_number") {
+			numberInt = 100
 		}
 		c.Set("num", numberInt)
 
