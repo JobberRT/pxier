@@ -53,8 +53,9 @@ func (p *Pxier) Run() {
 			return
 		}
 		for _, f := range p.fetchers {
+			ft := f
 			go func() {
-				proxies := f.Fetch()
+				proxies := ft.Fetch()
 				p.insertProxy(proxies)
 			}()
 		}
@@ -102,7 +103,10 @@ func (p *Pxier) initFetcher() {
 
 // insertProxy insert all proxy to the database
 func (p *Pxier) insertProxy(proxies []*Proxy) {
-	logrus.Info("insert proxy")
+	logrus.WithFields(logrus.Fields{
+		"number":   len(proxies),
+		"provider": proxies[0].Provider,
+	}).Info("insert proxy")
 	for _, each := range proxies {
 		// Update or Create
 		if p.db.Model(&Proxy{}).Where("address = ? and dial_type = ?", each.Address, each.DialType).Update("updated_at", time.Now().Unix()).RowsAffected == 0 {
