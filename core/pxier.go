@@ -183,7 +183,7 @@ func (p *Pxier) registerMiddleware() {
 	p.Use(middleware.Recover())
 	p.Use(middleware.GzipWithConfig(middleware.GzipConfig{Level: 9}))
 	p.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(rate.Limit(rateLimit))))
-	//p.Use(logger)
+	p.Use(logger)
 	p.Use(checkRequireProxyParam)
 	p.Use(checkReportErrorParam)
 }
