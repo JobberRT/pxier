@@ -94,10 +94,10 @@ func checkReportErrorParam(next echo.HandlerFunc) echo.HandlerFunc {
 		if !strings.Contains(c.Path(), "report") {
 			return next(c)
 		}
-		if len(c.QueryParam("address")) == 0 {
+		if len(c.QueryParam("id")) == 0 || len(c.QueryParam("provider")) == 0 {
 			return c.JSON(http.StatusOK, map[string]any{
 				"code": httpFailed,
-				"err":  "missing param address",
+				"err":  "missing param provider or id",
 			})
 		}
 		return next(c)

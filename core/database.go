@@ -6,6 +6,7 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	gormLogger "gorm.io/gorm/logger"
+	"time"
 )
 
 // newDB creates a new *gorm.DB instance and migrate the models
@@ -24,5 +25,9 @@ func newDB() *gorm.DB {
 	if err := db.AutoMigrate(&Proxy{}); err != nil {
 		logrus.WithError(err).Panic("failed to migrate model")
 	}
+	d, _ := db.DB()
+	d.SetMaxIdleConns(10)
+	d.SetMaxOpenConns(100)
+	d.SetConnMaxLifetime(time.Hour)
 	return db
 }

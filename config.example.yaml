@@ -1,9 +1,11 @@
 # http address should be listened
 listen: "0.0.0.0:80"
 # each ip request rate limit
-rate_limit: 3
+rate_limit: 1000
 # each X seconds to remove dead proxy from mysql
 remove_interval: 60 # in seconds
+# each X seconds to sync local cache to database
+sync_interval: 30
 # how many error times could a proxy get before being deleted
 max_error_time: 10
 # client each require proxy request's max require number

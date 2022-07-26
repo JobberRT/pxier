@@ -16,7 +16,8 @@
   - Param_`num`: how many proxies you want to require
   - Param_`provider`: which provider[Check here](./core/types.go) you want to use, split by `,`
 - `/report`: mark a proxy as error, once a proxy's error times exceed the max error value, it will be deleted from the database
-  - PARAM_`address`: IP:PORT of the error proxy 
+  - Param_`id`: Proxy's ID
+  - Param_`provider`: Proxy's provider
 
 ### Install & Use
 

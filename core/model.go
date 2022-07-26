@@ -1,7 +1,7 @@
 package core
 
 type Proxy struct {
-	Id        int    `gorm:"primaryKey; autoIncrement"`
+	Id        int    `gorm:"primaryKey; autoIncrement" json:"id"`
 	Address   string `json:"address"`
 	Provider  string `json:"provider"`
 	CreatedAt int64  `json:"-"`
