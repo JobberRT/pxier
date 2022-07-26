@@ -92,6 +92,7 @@ func (p *Pxier) syncDB() {
 		p.cacheLock.Lock()
 		for pvd, proxyMap := range p.dbCache {
 			for pid, each := range proxyMap {
+				each.UpdatedAt = time.Now().Unix()
 				go p.db.Save(&each)
 				// After sync to database, check if max err
 				if each.ErrTimes > p.maxErr {
@@ -123,6 +124,7 @@ func (p *Pxier) syncCache() {
 				logrus.WithError(err).Panic("failed to sync database to cache")
 			}
 			p.cacheLock.Lock()
+			p.dbCache = map[string]map[int]*Proxy{}
 			for _, each := range temp {
 				if p.dbCache[pvd] == nil {
 					p.dbCache[pvd] = map[int]*Proxy{}
@@ -162,7 +164,7 @@ func (p *Pxier) insertProxy(proxies []*Proxy) {
 	}).Info("insert proxy")
 	for _, each := range proxies {
 		// Update or Create
-		if p.db.Model(&Proxy{}).Where("address = ? and dial_type = ?", each.Address, each.DialType).Update("updated_at", time.Now().Unix()).RowsAffected == 0 {
+		if db := p.db.Model(&Proxy{}).Where("address = ? and dial_type = ?", each.Address, each.DialType).Update("updated_at", time.Now().Unix()); db.RowsAffected == 0 {
 			each.ErrTimes = 0
 			each.CreatedAt = time.Now().Unix()
 			each.UpdatedAt = time.Now().Unix()
