@@ -3,7 +3,6 @@ package core
 import (
 	"fmt"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 	"math/rand"
 	"net/http"
 	"strconv"
@@ -24,12 +23,6 @@ func (p *Pxier) apiGetStatus(c echo.Context) error {
 }
 
 func (p *Pxier) apiGetProxy(c echo.Context) error {
-	start := time.Now()
-	defer func() {
-		if time.Now().Sub(start) > 100*time.Millisecond {
-			logrus.WithField("cost", time.Now().Sub(start).String()).Warn("getProxy time cost")
-		}
-	}()
 	num := c.Get("num").(int)
 	providers := c.Get("providers").([]string)
 	eachProviderNum := num / len(providers)
@@ -68,12 +61,6 @@ func (p *Pxier) apiGetProxy(c echo.Context) error {
 }
 
 func (p *Pxier) apiReportError(c echo.Context) error {
-	start := time.Now()
-	defer func() {
-		if time.Now().Sub(start) > 100*time.Millisecond {
-			logrus.WithField("cost", time.Now().Sub(start).String()).Warn("report time cost")
-		}
-	}()
 	id, err := strconv.Atoi(c.QueryParam("id"))
 	if err != nil {
 		return c.JSON(http.StatusOK, map[string]any{
