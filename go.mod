@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/antonfisher/nested-logrus-formatter v1.3.1
 	github.com/labstack/echo/v4 v4.7.2
+	github.com/orcaman/concurrent-map/v2 v2.0.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/viper v1.12.0
 	github.com/valyala/fasthttp v1.38.0

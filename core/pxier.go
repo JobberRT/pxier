@@ -3,12 +3,13 @@ package core
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	cmap "github.com/orcaman/concurrent-map/v2"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"golang.org/x/time/rate"
 	"gorm.io/gorm"
+	"strconv"
 	"strings"
-	"sync"
 	"time"
 )
 
@@ -19,21 +20,19 @@ type Pxier struct {
 	fetchers  []fetcher
 	db        *gorm.DB
 	stop      bool
-	dbCache   map[string]map[int]*Proxy
-	cacheLock *sync.RWMutex
+	dbCache   cmap.ConcurrentMap[*Proxy]
 }
 
 // NewPixer creates a new Pxier instance and return
 func NewPixer() *Pxier {
 	p := &Pxier{
-		cacheLock: &sync.RWMutex{},
 		Echo:      echo.New(),
 		startTime: time.Now().Unix(),
 		maxErr:    viper.GetInt("max_error_time"),
 		fetchers:  make([]fetcher, 0),
 		db:        newDB(),
 		stop:      false,
-		dbCache:   map[string]map[int]*Proxy{},
+		dbCache:   cmap.New[*Proxy](),
 	}
 	p.initFetcher()
 	p.registerMiddleware()
@@ -89,18 +88,13 @@ func (p *Pxier) syncDB() {
 	defer ticker.Stop()
 	for {
 		logrus.Info("sync cache to database")
-		p.cacheLock.Lock()
-		for pvd, proxyMap := range p.dbCache {
-			for pid, each := range proxyMap {
-				each.UpdatedAt = time.Now().Unix()
-				go p.db.Save(&each)
-				// After sync to database, check if max err
-				if each.ErrTimes > p.maxErr {
-					delete(p.dbCache[pvd], pid)
-				}
+		for pid, pxy := range p.dbCache.Items() {
+			pxy.UpdatedAt = time.Now().Unix()
+			go p.db.Save(&pxy)
+			if pxy.ErrTimes > p.maxErr {
+				p.dbCache.Remove(pid)
 			}
 		}
-		p.cacheLock.Unlock()
 		<-ticker.C
 	}
 }
@@ -115,26 +109,16 @@ func (p *Pxier) syncCache() {
 	defer ticker.Stop()
 	for {
 		logrus.Info("sync database to cache")
-		for _, pvd := range AllProviderType {
-			temp := make([]*Proxy, 0)
-			if err := p.db.Where("provider = ? and err_times <= ?", pvd, p.maxErr).Find(&temp).Error; err != nil {
-				if strings.Contains(err.Error(), "Too many connections") {
-					continue
-				}
-				logrus.WithError(err).Panic("failed to sync database to cache")
+		temp := make([]*Proxy, 0)
+		if err := p.db.Where("err_times <= ?", p.maxErr).Find(&temp).Error; err != nil {
+			if strings.Contains(err.Error(), "Too many connections") {
+				continue
 			}
-			p.cacheLock.Lock()
-			p.dbCache = map[string]map[int]*Proxy{}
-			for _, each := range temp {
-				if p.dbCache[pvd] == nil {
-					p.dbCache[pvd] = map[int]*Proxy{}
-				}
-				if p.dbCache[pvd][each.Id] != nil {
-					continue
-				}
-				p.dbCache[pvd][each.Id] = each
-			}
-			p.cacheLock.Unlock()
+			logrus.WithError(err).Panic("failed to sync database to cache")
+		}
+		p.dbCache.Clear()
+		for _, each := range temp {
+			p.dbCache.Set(strconv.Itoa(each.Id), each)
 		}
 		<-ticker.C
 	}
