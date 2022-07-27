@@ -3,7 +3,6 @@ package core
 import (
 	"fmt"
 	"github.com/labstack/echo/v4"
-	"math/rand"
 	"net/http"
 	"time"
 )
@@ -25,15 +24,20 @@ func (p *Pxier) apiGetProxy(c echo.Context) error {
 	providers := c.Get("providers").([]string)
 
 	res := make([]*Proxy, 0)
-	for len(res) < num {
-		for _, pxy := range p.dbCache.Items() {
-			randomProvider := providers[rand.Intn(len(providers))]
-			if pxy.Provider == randomProvider && pxy.ErrTimes < p.maxErr {
+	for _, pxy := range p.dbCache.Items() {
+		if pxy.ErrTimes > p.maxErr {
+			continue
+		}
+		for _, pvd := range providers {
+			if pxy.Provider == pvd {
 				res = append(res, pxy)
-				break
 			}
 		}
+		if len(res) >= num {
+			break
+		}
 	}
+
 	return c.JSON(http.StatusOK, map[string]any{
 		"code": httpSuccess,
 		"data": res,
