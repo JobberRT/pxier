@@ -81,7 +81,7 @@ func checkRequireProxyParam(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 		uniqueSlice := make([]string, 0)
 		for pvd := range uniqueProvider {
-			uniqueSlice = append(uniqueSlice, pvd)
+			uniqueSlice = append(uniqueSlice, strings.ToUpper(pvd))
 		}
 		c.Set("providers", uniqueSlice)
 
